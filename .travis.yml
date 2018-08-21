@@ -1,26 +1,21 @@
 language: python
-
 python:
-    - 3.7
-
+- 3.7
 matrix:
-    include:
-        - python: 3.7
-          dist: xenial
-          sudo: true
-          env: TOXENV=lint,unittest
-
+  include:
+  - python: 3.7
+    dist: xenial
+    sudo: true
+    env: TOXENV=lint,unittest
 install:
-    - pip install tox
-
+- pip install tox
 script:
-    - tox
-
+- tox
 deploy:
-    provider: pypi
-    user: 'freelancer'
-    password:
-        secure: NVd6wCa6ErFBkGkkJmCvykMdWXibeGDsiMfxJ/5AO/tVtcj1NjJh5UzYRVxepZS+T4nmTvqQny5cSXpUeC1OzvJmWXWEOwJ4u75CggM3zcT8khCT9ztd2wA6ITPXaTe8mA2hGgh9V0kisiILNY3x6o26gqMv4dgpiM4+wEyXwz6OQW8yvtBnBJfz7bkI45yACFtbLeYLih+r4JWSPPgUXus9Vr7q+0GXUo4L8RzcOJ0vlp18cDbuwjlyEnaMcMPE3hul8RsIPJuMiDtIn6MZL70FXxD+jUXnEYtdRz3rDB3EzD5Onlop/TrXW+Tmk2fODn6PuKtlVuFDYa9+eifH+QDwQ2lRfxRsK/Rz8qWm9B7h0F+2lqWaLRN1Of+kYMK5euooY5mxj+GmPVysFlPYLud5ZXSDYdPB3RC/dduX+NJlc6NIMot3aI/R2ZfCwtmeSry14htgZRFt2GSXWBdmh0VrJsc9nywOQXlgFI9diepclfZC0/FFW2Rnc4StJJjx2nlshTQXfXg7yxfCUoWjdiHRkr6G1od0j+AlE9GOndqEyL07Z1F5md5uz5hJdH9EpwNSb9qTUhfQTay7DkR8x8v5GJPcXRtxzFMq2VO716SbaCyz0A6VJ2GmkrW1LsRJUfewmoIZMIMIWDcyS5VWf5GkiD+zA+77Vg559ixRG/s=
-    on:
-        tags: true
-    distributions: "sdist bdist_wheel"
+  provider: pypi
+  user: freelancer
+  password:
+    secure: jd+MR8uMI+jbMFFr1ERxn7jUjoxBYySD8gW9UKrUaSNARb8r98GlAnuE/CauRI5N33CJgJugvpIIlJXkmkhI0FES476qmepiTP6d+RbpcYK/K6t3zpFASKRy82Fe6LWSQZFM4qkVxQI9INExPv5bNHy6NdYh4/4qfT0YZcDgiPvsSRytSdmqwfc4G1UBpJA1ZLLpLh9LIpDDDmu9Yf2u1Vw41mEWtIZmC8vkEMHA7D8sqjPf/V+w4S4dUNhHhd4gkFC/JK8qXUzbXl9qaY3R3Xd6BfEGqlIPkwFXidZhVQrbP8RPdOT3GDlDBn35t2Y0gqzspBPMIBfoaCdwTIqA8N2s/H651cQXDMK3FB+XDCpLGKWwWGFOmZ9tEldmDqHSHPpNcyCelWshBTOFT+BxJW91ceI0t7pC3YmikCrYZPKA6dLFvYEi+1WsTEvKuW1tvMwpax5E6go1rtjUzhtQwLkeH4u5fLuTzw/O039jtlSY1ur75RsdqzVdgCpUTagsAbq7zLxkQsk+old8ovpz9FurJaDLsSFTwVcGTClpx2rreZf4+4+6j3DD5Tjmm030kh0A5DdgN/d9SqPZLDfwRhrLcm8Ny03Sz+WwmkiknlIWHfNjCVMm68baQkxBBT84XmX1B7z1w2bYI45GLXHN3RzJWP8vH7L/EHP+Vxh7u5s=
+  on:
+    tags: true
+  distributions: sdist bdist_wheel
