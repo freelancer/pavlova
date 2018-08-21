@@ -7,6 +7,7 @@ setup(
     long_description=open('README.rst').read(),
     author='Freelancer.com',
     author_email='chris@freelancer.com',
+    url='https://github.com/freelancer/pavlova',
     packages=find_packages(
         exclude=["*.tests", "*.tests.*", "tests.*", "tests"]
     ),
