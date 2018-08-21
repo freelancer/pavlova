@@ -1,0 +1,26 @@
+language: python
+
+python:
+    - 3.7
+
+matrix:
+    include:
+        - python: 3.7
+          dist: xenial
+          sudo: true
+          env: TOXENV=lint,unittest
+
+install:
+    - pip install tox
+
+script:
+    - tox
+
+deploy:
+    provider: pypi
+    user: 'freelancer'
+    password:
+        secure: NVd6wCa6ErFBkGkkJmCvykMdWXibeGDsiMfxJ/5AO/tVtcj1NjJh5UzYRVxepZS+T4nmTvqQny5cSXpUeC1OzvJmWXWEOwJ4u75CggM3zcT8khCT9ztd2wA6ITPXaTe8mA2hGgh9V0kisiILNY3x6o26gqMv4dgpiM4+wEyXwz6OQW8yvtBnBJfz7bkI45yACFtbLeYLih+r4JWSPPgUXus9Vr7q+0GXUo4L8RzcOJ0vlp18cDbuwjlyEnaMcMPE3hul8RsIPJuMiDtIn6MZL70FXxD+jUXnEYtdRz3rDB3EzD5Onlop/TrXW+Tmk2fODn6PuKtlVuFDYa9+eifH+QDwQ2lRfxRsK/Rz8qWm9B7h0F+2lqWaLRN1Of+kYMK5euooY5mxj+GmPVysFlPYLud5ZXSDYdPB3RC/dduX+NJlc6NIMot3aI/R2ZfCwtmeSry14htgZRFt2GSXWBdmh0VrJsc9nywOQXlgFI9diepclfZC0/FFW2Rnc4StJJjx2nlshTQXfXg7yxfCUoWjdiHRkr6G1od0j+AlE9GOndqEyL07Z1F5md5uz5hJdH9EpwNSb9qTUhfQTay7DkR8x8v5GJPcXRtxzFMq2VO716SbaCyz0A6VJ2GmkrW1LsRJUfewmoIZMIMIWDcyS5VWf5GkiD+zA+77Vg559ixRG/s=
+    on:
+        tags: true
+    distributions: "sdist bdist_wheel"
