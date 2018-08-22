@@ -1,4 +1,12 @@
 from setuptools import find_packages, setup
+import sys
+
+requirements = [
+    'dateparser',
+]
+
+if sys.version_info < (3, 7):
+    requirements.append('dataclasses')
 
 setup(
     name='pavlova',
@@ -11,9 +19,7 @@ setup(
     packages=find_packages(
         exclude=["*.tests", "*.tests.*", "tests.*", "tests"]
     ),
-    install_requires=[
-        'dateparser',
-    ],
+    install_requires=requirements,
     classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: GNU Lesser '

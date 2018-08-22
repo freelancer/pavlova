@@ -1,16 +1,19 @@
 language: python
-python:
-- 3.7
 matrix:
   include:
+  - python: 3.6
+    dist: xenial
+    sudo: true
+    env: TOXENV=lint,unittest
   - python: 3.7
     dist: xenial
     sudo: true
     env: TOXENV=lint,unittest
+
 install:
-- pip install tox
+  - pip install tox
 script:
-- tox
+  - tox
 deploy:
   provider: pypi
   user: freelancer

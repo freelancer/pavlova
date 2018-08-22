@@ -5,6 +5,7 @@ Changelog
 ++++++++++++++++++
 
 Added support for using Pavlova with Flask
+Added support for Python 3.6
 
 0.1.0 (2018-02-22)
 ++++++++++++++++++
