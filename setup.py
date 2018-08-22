@@ -10,7 +10,7 @@ if sys.version_info < (3, 7):
 
 setup(
     name='pavlova',
-    version='0.1.1.dev1',
+    version='0.1.1.dev2',
     description='Simplified deserialization using dataclasses',
     long_description=open('README.rst').read(),
     author='Freelancer.com',
