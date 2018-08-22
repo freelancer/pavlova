@@ -1,12 +1,15 @@
 "Pavlova"
 
+#pylint: disable=no-name-in-module,ungrouped-imports
+
 import datetime
 from decimal import Decimal
 from enum import Enum
 import inspect
 import typing
-from typing import Any, Dict, Type, TypeVar, Union, Generic, List, Mapping
-from typing import _GenericAlias as GenericAlias  # type: ignore
+from typing import (
+    Any, Dict, Type, TypeVar, Union, Generic, List, Mapping
+)
 import sys
 
 import dataclasses
@@ -15,13 +18,19 @@ from pavlova.base import BasePavlova
 from pavlova.parsers import PavlovaParser
 import pavlova.parsers
 
+
+if sys.version_info < (3, 7):
+    from typing import GenericMeta as GenericAlias  # type: ignore
+else:
+    from typing import _GenericAlias as GenericAlias  # type: ignore
+
 T = TypeVar('T')  # pylint: disable=invalid-name
 
 
 class Pavlova(BasePavlova):
     "The main Pavlova class that handles parsing dictionaries"
 
-    parsers: Dict[Union[GenericAlias, Type[Any]], PavlovaParser] = {}
+    parsers: Dict[Any, PavlovaParser] = {}
 
     def __init__(self) -> None:
         self.parsers = {
@@ -39,7 +48,7 @@ class Pavlova(BasePavlova):
 
     def register_parser(
             self,
-            parser_type: Union[GenericAlias, Type[Any]],
+            parser_type: Type[Any],
             parser: pavlova.parsers.PavlovaParser,
     ) -> None:
         """Adds a PavlovaParser for a particular type, this is in addition to
@@ -89,10 +98,13 @@ class Pavlova(BasePavlova):
                 input_value, field_type,
             )
 
-        # Some types, such as List, Dict, Union etc show up as type
-        # '_GenericAlias'. As such, it is very hacky to track what their types
-        # actually are, and what the calling party is intending.
-        if isinstance(field_type, GenericAlias):
+        # In Python 3.7, some types, such as List, Dict, Union etc show up as
+        # type '_GenericAlias'. As such, it is very hacky to track what their
+        # types actually are, and what the calling party is intending.
+        # In Python 3.6, the types aren't _GenericAlias, but are sometimes
+        # GenericMeta, or some weird type that appears to be the same thing,
+        # but isn't (Looking at you, Union)
+        if field_type.__module__ == 'typing':
             if getattr(field_type, '_name', None):
                 base_type = getattr(
                     sys.modules.get(field_type.__module__),

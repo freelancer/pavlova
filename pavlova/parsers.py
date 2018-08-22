@@ -1,4 +1,5 @@
-#pylint: disable=too-few-public-methods
+#pylint: disable=too-few-public-methods,missing-docstring
+#pylint: disable=unused-argument,no-self-use
 "This module contains all of the built in parsers for Pavlova"
 
 from abc import ABC, abstractmethod
