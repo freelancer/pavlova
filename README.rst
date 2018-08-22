@@ -44,6 +44,20 @@ There are more parsers to come, however to implement your own custom parser,
 simply implement `PavlovaParser` in `pavlova.parsers`, and register it with the
 Pavlova object with the `register_parser` method.
 
+Installation
+############
+
+.. code-block:: shell
+
+    pip install pavlova
+
+Requirements
+############
+
+Pavlova is only supported on Python 3.6 and higher. With Python 3.6, it will
+install the `dataclasses <https://github.com/ericvsmith/dataclasses>` module.
+With Python 3.7 and higher, it will use the built-in dataclasses module.
+
 License
 ~~~~~~~
 
