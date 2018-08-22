@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='pavlova',
-    version='0.1.1.dev0',
+    version='0.1.1.dev1',
     description='Simplified deserialization using dataclasses',
     long_description=open('README.rst').read(),
     author='Freelancer.com',
