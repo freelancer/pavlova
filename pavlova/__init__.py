@@ -8,7 +8,7 @@ from enum import Enum
 import inspect
 import typing
 from typing import (
-    Any, Dict, Type, TypeVar, Union, Generic, List, Mapping
+    Any, Dict, Type, TypeVar, Union, Generic, List, Mapping, Optional, Tuple
 )
 import sys
 
@@ -25,6 +25,21 @@ else:
     from typing import _GenericAlias as GenericAlias  # type: ignore
 
 T = TypeVar('T')  # pylint: disable=invalid-name
+
+
+class PavlovaParsingError(Exception):
+    """The exception that will be thrown if there is a ValueError or TypeError
+    encountered when parsing a mapping."""
+    def __init__(self,
+                 message: str,
+                 original_exception: Exception,
+                 path: Tuple[str, ...],
+                 expected_type: Type) -> None:
+        super().__init__(message)
+
+        self.original_exception = original_exception
+        self.path = path
+        self.expected_type = expected_type
 
 
 class Pavlova(BasePavlova):
@@ -59,43 +74,68 @@ class Pavlova(BasePavlova):
 
     def from_mapping(self,
                      input_mapping: Mapping[Any, Any],
-                     model_class: Type[T]) -> T:
+                     model_class: Type[T],
+                     path: Optional[Tuple[str, ...]] = None) -> T:
         """Given a dictionary and a dataclass, return an instance of the
         dataclass"""
+        if path is None:
+            path = tuple()
+
         if not dataclasses.is_dataclass(model_class):
-            raise TypeError()
+            raise TypeError("The root class must be a dataclass")
 
         data = dict()
         for field in dataclasses.fields(model_class):
             if field.name not in input_mapping:
                 continue
 
-            data[field.name] = self.parse_field(
-                input_mapping[field.name], field.type,
-            )
+            try:
+                data[field.name] = self.parse_field(
+                    input_mapping[field.name],
+                    field.type,
+                    path + (field.name,),
+                )
+            except (ValueError, TypeError) as exc:
+                raise PavlovaParsingError(
+                    str(exc),
+                    exc,
+                    path + (field.name,),
+                    field.type,
+                )
 
-            if field.metadata and 'validator' in field.metadata:
-                if not field.metadata['validator'](data[field.name]):
-                    raise ValueError(
-                        f'{data[field.name]} is not a '
-                        f' valid value for {field.type}'
-                    )
+            try:
+                if field.metadata and 'validator' in field.metadata:
+                    if not field.metadata['validator'](data[field.name]):
+                        raise ValueError(
+                            f'{data[field.name]} is not a '
+                            f' valid value for {field.type}'
+                        )
+            except ValueError as exc:
+                raise PavlovaParsingError(
+                    str(exc),
+                    exc,
+                    path + (field.name,),
+                    field.type,
+                )
 
         return model_class(**data)  # type: ignore
 
-    def parse_field(self, input_value: Any, field_type: Type) -> Any:
+    def parse_field(self,
+                    input_value: Any,
+                    field_type: Type,
+                    path: Tuple[str, ...]) -> Any:
         # pylint: disable=protected-access
 
         if field_type in self.parsers:
             return self.parsers[field_type].parse_input(
-                input_value, field_type,
+                input_value, field_type, path
             )
 
         # If the type is a dataclass, go ahead and call from_mapping
         # recursively.
         if dataclasses.is_dataclass(field_type):
             return self.from_mapping(
-                input_value, field_type,
+                input_value, field_type, path
             )
 
         # In Python 3.7, some types, such as List, Dict, Union etc show up as
@@ -114,7 +154,7 @@ class Pavlova(BasePavlova):
                 base_type = field_type.__origin__
 
             return self.parsers[base_type].parse_input(
-                input_value, field_type,
+                input_value, field_type, path
             )
 
         # Check to see if any of the type's parent types is something we can
@@ -128,7 +168,7 @@ class Pavlova(BasePavlova):
         # will be the first item in the list
         if candidate_types:
             return self.parsers[candidate_types[0]].parse_input(
-                input_value, field_type
+                input_value, field_type, path
             )
 
         raise TypeError(f'Type {field_type} is not supported')

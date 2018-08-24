@@ -8,7 +8,7 @@ from typing import Dict, List, Optional
 
 from dataclasses import dataclass
 
-from pavlova import Pavlova
+from pavlova import Pavlova, PavlovaParsingError
 
 
 class SampleEnum(Enum):
@@ -33,6 +33,11 @@ class Sample:
     locations: List[str]
     country: Optional[str]
     nested: Optional[NestedSample] = None
+
+
+@dataclass
+class SimpleSample:
+    value: List[int]
 
 
 class TestPavlova(unittest.TestCase):
@@ -75,3 +80,25 @@ class TestPavlova(unittest.TestCase):
         self.assertTrue(isinstance(parsed, Nested))
         self.assertTrue(isinstance(parsed.nested, NestedSample))
         self.assertEqual(parsed.nested.key, 'locked')
+
+    def test_value_error_causes_error(self) -> None:
+        pavlova = Pavlova()
+        with self.assertRaises(PavlovaParsingError) as raised:
+            pavlova.from_mapping({
+                'value': ['bob'],
+            }, SimpleSample)
+
+        exc = raised.exception
+        self.assertTrue(isinstance(exc.original_exception, ValueError))
+        self.assertEqual(exc.path, ('value',))
+
+    def test_type_error_causes_error(self) -> None:
+        pavlova = Pavlova()
+        with self.assertRaises(PavlovaParsingError) as raised:
+            pavlova.from_mapping({
+                'value': 'bob',
+            }, SimpleSample)
+
+        exc = raised.exception
+        self.assertTrue(isinstance(exc.original_exception, TypeError))
+        self.assertEqual(exc.path, ('value',))
