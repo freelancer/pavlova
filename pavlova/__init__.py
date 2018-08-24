@@ -103,21 +103,6 @@ class Pavlova(BasePavlova):
                     field.type,
                 )
 
-            try:
-                if field.metadata and 'validator' in field.metadata:
-                    if not field.metadata['validator'](data[field.name]):
-                        raise ValueError(
-                            f'{data[field.name]} is not a '
-                            f' valid value for {field.type}'
-                        )
-            except ValueError as exc:
-                raise PavlovaParsingError(
-                    str(exc),
-                    exc,
-                    path + (field.name,),
-                    field.type,
-                )
-
         return model_class(**data)  # type: ignore
 
     def parse_field(self,

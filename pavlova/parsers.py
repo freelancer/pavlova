@@ -184,3 +184,15 @@ class EnumParser(PavlovaParser[Enum]):
 
         # Try instantiating the enum with our value
         return field_type(input_value)
+
+
+class GenericParser(PavlovaParser[T]):
+    def __init__(self, pavlova: BasePavlova, parser_type: T) -> None:
+        super().__init__(pavlova)
+        self.parser_type = parser_type
+
+    def parse_input(self,
+                    input_value: Any,
+                    field_type: Type,
+                    path: Tuple[str, ...]) -> T:
+        return self.parser_type(input_value)  # type: ignore
