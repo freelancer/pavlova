@@ -87,6 +87,15 @@ class Pavlova(BasePavlova):
         data = dict()
         for field in dataclasses.fields(model_class):
             if field.name not in input_mapping:
+                # Check if there is a default value set. If there isn't, raise
+                # an error, else continue parsing.
+                if not hasattr(model_class, field.name):
+                    raise PavlovaParsingError(
+                        f'Field: {field.name} missing',
+                        TypeError(),
+                        path + (field.name,),
+                        field.type,
+                    )
                 continue
 
             try:

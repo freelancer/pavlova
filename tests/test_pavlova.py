@@ -40,6 +40,7 @@ class Sample:
 @dataclass
 class SimpleSample:
     value: List[int]
+    test: Optional[str] = None
 
 
 class TestPavlova(unittest.TestCase):
@@ -100,6 +101,15 @@ class TestPavlova(unittest.TestCase):
             pavlova.from_mapping({
                 'value': 'bob',
             }, SimpleSample)
+
+        exc = raised.exception
+        self.assertTrue(isinstance(exc.original_exception, TypeError))
+        self.assertEqual(exc.path, ('value',))
+
+    def test_missing_value_causes_error(self) -> None:
+        pavlova = Pavlova()
+        with self.assertRaises(PavlovaParsingError) as raised:
+            pavlova.from_mapping({}, SimpleSample)
 
         exc = raised.exception
         self.assertTrue(isinstance(exc.original_exception, TypeError))
