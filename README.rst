@@ -55,7 +55,7 @@ Requirements
 ############
 
 Pavlova is only supported on Python 3.6 and higher. With Python 3.6, it will
-install the `dataclasses <https://github.com/ericvsmith/dataclasses>` module.
+install the `dataclasses <https://github.com/ericvsmith/dataclasses>`__ module.
 With Python 3.7 and higher, it will use the built-in dataclasses module.
 
 License
