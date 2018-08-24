@@ -9,6 +9,7 @@ from typing import List, Dict, Union, Optional
 from pavlova import Pavlova
 import pavlova.parsers
 from pavlova.parsers import PavlovaParser
+from tests import Email
 
 
 class TestBoolParser(unittest.TestCase):
@@ -232,3 +233,16 @@ class TestEnumParser(unittest.TestCase):
         self.assertEqual(
             parser.parse_input(2, SampleEnum, tuple()), SampleEnum.GREEN
         )
+
+
+class TestGenericParser(unittest.TestCase):
+    def test_calls_generic_type(self) -> None:
+
+        parser = pavlova.parsers.GenericParser(Pavlova(), Email)
+        self.assertEqual(
+            parser.parse_input('chris@chris', Email, tuple()),
+            'chris@chris',
+        )
+
+        with self.assertRaises(ValueError):
+            parser.parse_input('chris', Email, tuple())

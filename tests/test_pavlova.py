@@ -9,6 +9,8 @@ from typing import Dict, List, Optional
 from dataclasses import dataclass
 
 from pavlova import Pavlova, PavlovaParsingError
+from pavlova.parsers import GenericParser
+from tests import Email
 
 
 class SampleEnum(Enum):
@@ -102,3 +104,18 @@ class TestPavlova(unittest.TestCase):
         exc = raised.exception
         self.assertTrue(isinstance(exc.original_exception, TypeError))
         self.assertEqual(exc.path, ('value',))
+
+    def test_with_generic_parser(self) -> None:
+        @dataclass
+        class Example:
+            email: Email
+
+        pavlova = Pavlova()
+        pavlova.register_parser(Email, GenericParser(pavlova, Email))
+        pavlova.from_mapping({'email': 'chris@chris.com'}, Example)
+
+        with self.assertRaises(PavlovaParsingError):
+            pavlova.from_mapping({'email': 'chris'}, Example)
+
+        with self.assertRaises(PavlovaParsingError):
+            pavlova.from_mapping({'email': 123}, Example)
