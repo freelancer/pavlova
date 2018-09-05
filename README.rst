@@ -51,6 +51,33 @@ Installation
 
     pip install pavlova
 
+Usage with Flask
+################
+
+.. code-block:: python
+
+    from dataclasses import dataclass, asdict
+
+    from flask import Flask, jsonify
+    from pavlova.flask import FlaskPavlova
+
+    pavlova = FlaskPavlova()
+    app = Flask(__name__)
+
+    @dataclass
+    class SampleInput:
+        id: int
+        name: str
+
+    @app.route('/post', methods=['POST'])
+    @pavlova.use(SampleInput)
+    def data(data: SampleInput):
+        data.id = data.id * len(data.name)
+        return jsonify(asdict(data))
+
+
+    app.run()
+
 Requirements
 ############
 
