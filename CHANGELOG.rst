@@ -1,7 +1,12 @@
 Changelog
 ---------
 
-0.1.1 (unreleased)
+0.1.2 (2018-09-10)
+++++++++++++++++++
+
+Added support for reading values from the query string and json body for Flask.
+
+0.1.1 (2018-09-05)
 ++++++++++++++++++
 
 Added support for using Pavlova with Flask
