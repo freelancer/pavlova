@@ -28,7 +28,14 @@ class FlaskPavlova(Pavlova):
         return _wrapper
 
     def _from_flask_request(self, model_class: Type[T]) -> T:
+        json_body: Dict[str, Any] = {}
         if flask.request.is_json:
-            return self.from_mapping(flask.request.get_json(), model_class)
+            json_body = flask.request.get_json()
 
-        return self.from_mapping(flask.request.values, model_class)
+        return self.from_mapping(
+            {
+                **json_body,
+                **flask.request.values.to_dict()
+            },
+            model_class
+        )
