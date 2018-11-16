@@ -162,6 +162,9 @@ class UnionParser(PavlovaParser[Union[T]]):
             raise TypeError('Unions of this type are not allowed')
 
         real_field_type = field_type.__args__[0]
+        # fast exit when field_type is Optional and input_value is None
+        if input_value is None:
+            return field_type.__args__[1]()
         return self.pavlova.parse_field(input_value, real_field_type, path)
 
 

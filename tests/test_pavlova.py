@@ -129,3 +129,14 @@ class TestPavlova(unittest.TestCase):
 
         with self.assertRaises(PavlovaParsingError):
             pavlova.from_mapping({'email': 123}, Example)
+
+    def test_missing_nested_parsing(self) -> None:
+        @dataclass
+        class Nested:
+            nested: Optional[NestedSample] = None
+
+        pavlova = Pavlova()
+        parsed = pavlova.from_mapping({'nested': None}, Nested)
+
+        self.assertTrue(isinstance(parsed, Nested))
+        self.assertIsNone(parsed.nested)
