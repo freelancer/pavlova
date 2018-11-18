@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+0.1.3 (2018-11-19)
+++++++++++++++++++
+
+Fixed issue with optional nested dataclasses. (GH-7)
+
 0.1.2 (2018-09-10)
 ++++++++++++++++++
 
